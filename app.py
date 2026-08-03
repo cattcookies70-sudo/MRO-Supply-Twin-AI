@@ -1,93 +1,95 @@
 import os
+import json
 import joblib
 import pandas as pd
-import json
 import streamlit as st
 from dotenv import load_dotenv
 from groq import Groq
 
-# 1. Configuration de la page Streamlit
-st.set_page_config(
-    page_title="SupplyTwin AI — MRO Risk Simulator",
-    page_icon="✈️",
-    layout="wide"
-)
+# 1. Config Page
+st.set_page_config(page_title="SupplyTwin AI — MRO Risk Simulator", page_icon="✈️", layout="wide")
 
-# 2. Chargement de l'environnement et des clés API
+# 2. Clé API Groq
 load_dotenv()
 groq_api_key = os.getenv("GROQ_API_KEY") or st.secrets.get("GROQ_API_KEY")
 
 if not groq_api_key:
-    st.error("⚠️ Clé GROQ_API_KEY non trouvée. Vérifie ton fichier .env ou tes secrets Streamlit.")
+    st.error("⚠️ Clé GROQ_API_KEY absente. Définissez-la dans vos variables d'environnement.")
     st.stop()
 
 client = Groq(api_key=groq_api_key)
 
-# 3. Chargement du modèle ML
+# 3. Chargement du modèle et des options dynamiques
 @st.cache_resource
-def load_ml_model():
-    model_data = joblib.load('models/mro_risk_model.pkl')
-    return model_data['model'], model_data['features']
+def load_assets():
+    bundle = joblib.load('models/mro_risk_model.pkl')
+    df = pd.read_csv('data/processed_mro_ml.csv')
+    
+    sites = sorted(df['site_id'].unique().tolist())
+    suppliers = sorted(df['supplier_id'].unique().tolist())
+    families = sorted(df['part_family'].unique().tolist())
+    
+    return bundle['model'], bundle['features'], sites, suppliers, families
 
 try:
-    model, features = load_ml_model()
+    model, model_features, sites_list, suppliers_list, families_list = load_assets()
 except Exception as e:
-    st.error(f"Erreur lors du chargement du modèle ML : {e}")
+    st.error(f"Erreur d'initialisation : {e}")
     st.stop()
 
-# 4. En-tête de l'application
+# 4. Header
 st.title("✈️ SupplyTwin AI — MRO Supply Chain Risk Simulator")
-st.markdown("""
-**Assistant IA & Jumeau Numérique MRO (Royal Air Maroc)**  
-Simulez le risque de retard/rupture d'une commande de pièces aéronautiques et obtenez un plan d'action d'urgence.
-""")
-
+st.markdown("**Digital Twin & Agent Décisionnel IA (Royal Air Maroc MRO)**[cite: 1]")
 st.divider()
 
-# 5. Interface Utilisateur (Sidebar & Formulaire)
+# 5. UI Layout
 col_input, col_results = st.columns([1, 2])
 
 with col_input:
     st.subheader("📋 Paramètres de la Commande")
     
-    site_id = st.selectbox("Site MRO", ["CMN_HUB", "RAK_SITE", "TNG_SITE"], index=0)
-    supplier_id = st.selectbox("Fournisseur", ["SUPP_01_AVIONICS", "SUPP_02_ENGINES", "SUPP_03_CABIN"], index=0)
+    site_id = st.selectbox("Site MRO Destinataire", sites_list)
+    supplier_id = st.selectbox(f"Fournisseur ({len(suppliers_list)} disponibles)", suppliers_list)
+    part_family = st.selectbox(f"Famille de Pièce ({len(families_list)} catégories)", families_list)
+    
     ordered_qty = st.number_input("Quantité Commandée", min_value=1, max_value=1000, value=50)
-    promised_lead_time = st.slider("Délai de livraison promis (jours)", min_value=1, max_value=180, value=90)
-    qty_fill_rate = st.slider("Taux de livraison historique (Fill Rate)", min_value=0.0, max_value=1.0, value=0.70, step=0.05)
+    promised_lead_time = st.slider("Délai de livraison promis (jours)", min_value=1, max_value=180, value=30)
+    qty_fill_rate = st.slider("Taux d'exécution historique (Fill Rate)", min_value=0.0, max_value=1.0, value=0.85, step=0.05)
+    quality_incidents_count = st.number_input("Incidents Qualité Récents du Fournisseur", min_value=0, max_value=15, value=1)
     
     btn_simulate = st.button("🚀 Lancer la Simulation AI", type="primary", use_container_width=True)
 
-# 6. Moteur de simulation (ML + LLM)
+# 6. Inférence & LLM Agent
 if btn_simulate:
     with col_results:
         st.subheader("📊 Résultats de la Simulation")
         
-        # Structuration de la donnée pour le ML
         scenario = {
             'ordered_qty': ordered_qty,
             'promised_lead_time': promised_lead_time,
             'qty_fill_rate': qty_fill_rate,
+            'quality_incidents_count': quality_incidents_count,
             'site_id': site_id,
-            'supplier_id': supplier_id
+            'supplier_id': supplier_id,
+            'part_family': part_family
         }
         
-        # Alignment des variables avec le One-Hot Encoding du modèle
+        # Alignement des features avec get_dummies
         df_single = pd.DataFrame([scenario])
         df_encoded = pd.get_dummies(df_single)
-        df_aligned = df_encoded.reindex(columns=features, fill_value=0)
+        df_aligned = df_encoded.reindex(columns=model_features, fill_value=0)
         
-        # Prédiction ML
+        # Calcul probabilité ML
         risk_proba = model.predict_proba(df_aligned)[0][1]
         risk_pct = risk_proba * 100
         
-        # Affichage du score avec indicateur visuel
-        col_metric1, col_metric2 = st.columns(2)
-        with col_metric1:
-            st.metric(label="Risque de Retard Détecté (ML)", value=f"{risk_pct:.1f}%")
-        with col_metric2:
+        # Affichage des métriques
+        c1, c2 = st.columns(2)
+        with c1:
+            st.metric("Risque de Retard Détecté (ML)", f"{risk_pct:.1f}%")
+        with c2:
             if risk_pct >= 60:
-                st.error("🔴 Risque Élevé (Alerte AOG)")
+                st.error("🔴 Risque Critique (Procédure AOG)")
             elif risk_pct >= 30:
                 st.warning("🟡 Risque Modéré")
             else:
@@ -95,26 +97,20 @@ if btn_simulate:
                 
         st.divider()
         
-        # Génération de la réponse LLM Groq
-        with st.spinner("🤖 Génération du plan d'action MRO par l'Agent IA (Groq)..."):
+        # Génération LLM
+        with st.spinner("🤖 Génération de la recommandation stratégique..."):
             system_prompt = """
-            Tu es un Expert Senior en Supply Chain Aéronautique et MRO pour la compagnie Royal Air Maroc.
-            Analyse le score de risque produit par le modèle ML et fournis une recommandation métier basée sur nos protocoles MRO :
-            1. **Diagnostic du Risque** (Analyse des facteurs Lead Time, Fill Rate, Fournisseur)
-            2. **Impact Flotte & Risque AOG** (Avion au sol)
-            3. **Plan d'Action Logistique Urgent** :
-               - Contrôle du stock disponible (Safety Stock / On-Hand)
-               - Protocole AOG Desk si risque > 60%
-               - Réallocation inter-sites (CMN / RAK / TNG)
+            Tu es un Expert Senior en Logistique Aéronautique pour Royal Air Maroc MRO[cite: 1].
+            Analyse les entrées du scénario et les résultats du modèle ML pour fournir :
+            1. Diagnostic Technique (Analyse de la combinatoire Fournisseur, Famille de pièce et Incidents).
+            2. Impact Site MRO (Différence d'impact selon si la livraison est vers CMN_HUB ou un site régional RAK/TNG).
+            3. Directives Opérationnelles :
+               - Si Incidents Qualité > 0 : protocole de sur-contrôle à la réception.
+               - Si Risque > 50% : plan de transfert inter-sites (CMN/RAK/TNG) ou sourcing alternatif urgent.
+            Sois synthétique, structuré et professionnel.
             """
 
-            user_prompt = f"""
-            Alerte Commande Pièce Aéronautique :
-            - Paramètres : {json.dumps(scenario, indent=2)}
-            - Probabilité de Retard Calculée par ML : {risk_pct:.1f}%
-
-            Fournis ton analyse décisionnelle.
-            """
+            user_prompt = f"Données du scénario :\n{json.dumps(scenario, indent=2)}\n\nRisque ML de retard : {risk_pct:.1f}%"
 
             response = client.chat.completions.create(
                 model="llama-3.3-70b-versatile",
