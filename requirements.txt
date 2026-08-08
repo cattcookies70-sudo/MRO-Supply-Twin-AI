@@ -1,0 +1,19 @@
+# Data Manipulation & Math
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Machine Learning
+scikit-learn>=1.2.0
+joblib>=1.2.0
+
+# Data Visualization (optionnel pour les notebooks)
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# LLM & API Integration
+groq>=0.4.0
+python-dotenv>=1.0.0
+
+# Streamlit App
+streamlit>=1.30.0
+plotly>=5.15.0
