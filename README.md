@@ -17,21 +17,21 @@ This multi-tab application combines **Machine Learning**, **LLM Decision Support
 ### 🚀 Tab 1: AI Risk Simulator & Decision Agent
 Predicts component stockout and delivery delay risks using Machine Learning (`Scikit-Learn`), combined with an LLM Agent providing structured, real-time operational recommendations for MRO managers.
 
-![Tab 1 - AI Simulator](./assets/tab1_simulator.png)
+![Tab 1 - AI Simulator](./assets/dashboard.png)
 
 ---
 
 ### 🗺️ Tab 2: 2D Digital Twin (Casablanca CMN Warehouse)
 Provides real-time spatial mapping of warehouse storage racks and part families, highlighting risk levels (Optimal, Warning, Critical AOG) across storage zones.
 
-![Tab 2 - 2D Digital Twin](./assets/tab2_digital_twin_2d.png)
+![Tab 2 - 2D Digital Twin](./assets/2D.png)
 
 ---
 
 ### 📦 Tab 3: 3D Interactive Component Inspection
 Interactive 3D visualization of major aeronautical structures (Boeing 787 components, landing gears, engines) allowing MRO engineers to inspect sub-assemblies and verify stock availability before maintenance operations.
 
-![Tab 3 - 3D Inspection](./assets/tab3_3d_inspection.png)
+![Tab 3 - 3D Inspection](./assets/3D.png)
 
 ---
 
