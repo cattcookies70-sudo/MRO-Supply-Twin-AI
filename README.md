@@ -61,6 +61,7 @@ Interactive 3D visualization of major aeronautical structures (Boeing 787 compon
             │
             ▼
    [ Docker Container ] ──► [ AWS Cloud Deployment ]
+   ```
 
 ## 🌐 Deployment Options
 
