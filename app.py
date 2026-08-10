@@ -244,7 +244,16 @@ inject_custom_css()
 # 3. INITIALISATION GROQ API (AVEC TOLÉRANCE RÉSEAU)
 # ==========================================
 load_dotenv()
-groq_api_key = os.getenv("GROQ_API_KEY") or st.secrets.get("GROQ_API_KEY")
+# Vérification sécurisée de la clé API
+groq_api_key = os.getenv("GROQ_API_KEY")
+
+# On n'accède à st.secrets que s'il existe et contient des données
+if not groq_api_key:
+    try:
+        if "GROQ_API_KEY" in st.secrets:
+            groq_api_key = st.secrets["GROQ_API_KEY"]
+    except Exception:
+        groq_api_key = None
 
 if not groq_api_key:
     st.error("⚠️ Clé GROQ_API_KEY absente. Définissez-la dans vos variables d'environnement.")
