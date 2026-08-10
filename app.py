@@ -241,7 +241,7 @@ def inject_custom_css():
 inject_custom_css()
 
 # ==========================================
-# 3. INITIALISATION GROQ API
+# 3. INITIALISATION GROQ API (AVEC TOLÉRANCE RÉSEAU)
 # ==========================================
 load_dotenv()
 groq_api_key = os.getenv("GROQ_API_KEY") or st.secrets.get("GROQ_API_KEY")
@@ -250,7 +250,12 @@ if not groq_api_key:
     st.error("⚠️ Clé GROQ_API_KEY absente. Définissez-la dans vos variables d'environnement.")
     st.stop()
 
-client = Groq(api_key=groq_api_key)
+# Configuration robuste avec retries et timeout
+client = Groq(
+    api_key=groq_api_key,
+    timeout=20.0,
+    max_retries=3
+)
 
 # ==========================================
 # 4. CHARGEMENT DES MODÈLES ET MÉTADONNÉES
@@ -352,17 +357,22 @@ with tab_sim:
 
                 user_prompt = f"Données du scénario :\n{json.dumps(scenario, indent=2)}\n\nRisque ML de retard : {risk_pct:.1f}%"
 
-                response = client.chat.completions.create(
-                    model="llama-3.3-70b-versatile",
-                    messages=[
-                        {"role": "system", "content": system_prompt},
-                        {"role": "user", "content": user_prompt}
-                    ],
-                    temperature=0.2
-                )
-                
-                st.markdown("### 📝 Recommandation Stratégique MRO")
-                st.markdown(response.choices[0].message.content)
+                try:
+                    response = client.chat.completions.create(
+                        model="llama-3.3-70b-versatile",
+                        messages=[
+                            {"role": "system", "content": system_prompt},
+                            {"role": "user", "content": user_prompt}
+                        ],
+                        temperature=0.2
+                    )
+                    
+                    st.markdown("### 📝 Recommandation Stratégique MRO")
+                    st.markdown(response.choices[0].message.content)
+
+                except Exception as e:
+                    st.warning("⚠️ **Instabilité réseau détectée :** Impossible de joindre l'agent IA pour le moment.")
+                    st.info("💡 **Conseil :** La connexion Internet a subi une micro-coupure. Cliquez à nouveau sur 'Lancer la Simulation AI'.")
 
 # ==========================================
 # TAB 2 : JUMEAU NUMÉRIQUE 2D
