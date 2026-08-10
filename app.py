@@ -280,7 +280,7 @@ except Exception as e:
 # ==========================================
 # 5. EN-TÊTE PRINCIPAL
 # ==========================================
-st.title("✈️ SupplyTwin AI — MRO Industry 4.0 Suite")
+st.title("✈️ SupplyTwin AI — MRO 4.0 Hub")
 st.markdown("**Plateforme Intégrée de Supervision MRO & Maintenance Prédictive (Royal Air Maroc)**")
 
 # ==========================================
@@ -348,14 +348,44 @@ with tab_sim:
             
             with st.spinner("🤖 Génération de la recommandation stratégique..."):
                 system_prompt = """
-                Tu es un Expert Senior en Logistique Aéronautique pour Royal Air Maroc MRO.
-                Analyse les entrées du scénario et les résultats du modèle ML pour fournir :
-                1. Diagnostic Technique (Fournisseur, Famille de pièce et Incidents).
-                2. Impact Site MRO (Livraison vers CMN_HUB vs sites régionaux RAK/TNG).
-                3. Directives Opérationnelles (Sur-contrôle qualité, transferts inter-sites).
+                Tu es un Expert Senior en Logistique Aéronautique pour Royal Air Maroc MRO (Casablanca CMN Hub).
+                Ta mission est de fournir une synthèse EXTRÊMEMENT CLAIRE, VISUELLE et FACILE À LIRE pour les décideurs.
+
+                Règles de rédaction strictes :
+                - Utilise des phrases courtes, du texte en gras et des émojis.
+                - Évite les longs paragraphes de texte continu.
+                - Structure ta réponse exactement avec les 3 sections ci-dessous.
+
+                Format attendu :
+
+                ### 📌 1. Synthèse du Risque
+                * **Note Global :** [Faible / Modéré / Critique] avec le % de risque ML.
+                * **Points Forts :** (ex: bon Fill Rate, 0 incident...).
+                * **Points d'Attention :** (ex: délai de 180 jours trop long, faible quantité...).
+
+                ### ⚠️ 2. Impact Opérationnel (AOG & Stock)
+                * **Risque Immobilisation Avion (AOG) :** [Évaluation rapide]
+                * **Tension sur le Hub CMN & Sites :** [Impact du délai et du Fill Rate sur les stocks]
+
+                ### 🛠️ 3. Plan d'Action Recommandé
+                1. 🔴 **Action Immédiate :** [Action prioritaire]
+                2. 🟡 **Contrôle & Suivi :** [Procédure de contrôle qualité ou suivi fournisseur]
+                3. 🟢 **Sécurité Logistique :** [Transfert inter-sites ou stock de sécurité]
                 """
 
-                user_prompt = f"Données du scénario :\n{json.dumps(scenario, indent=2)}\n\nRisque ML de retard : {risk_pct:.1f}%"
+                user_prompt = f"""
+                Voici les données du scénario à analyser :
+                - Quantité commandée : {ordered_qty} pièces
+                - Délai de livraison promis : {promised_lead_time} jours
+                - Taux d'exécution historique (Fill Rate) : {qty_fill_rate * 100:.1f}%
+                - Incidents qualité récents : {quality_incidents_count}
+                - Site MRO destinataire : {site_id}
+                - Fournisseur : {supplier_id}
+                - Famille de pièce : {part_family}
+    
+                Résultat du Modèle Prédictif ML :
+                - Risque de retard : {risk_pct:.1f}%
+                """
 
                 try:
                     response = client.chat.completions.create(
@@ -366,13 +396,13 @@ with tab_sim:
                         ],
                         temperature=0.2
                     )
-                    
+        
                     st.markdown("### 📝 Recommandation Stratégique MRO")
                     st.markdown(response.choices[0].message.content)
 
                 except Exception as e:
                     st.warning("⚠️ **Instabilité réseau détectée :** Impossible de joindre l'agent IA pour le moment.")
-                    st.info("💡 **Conseil :** La connexion Internet a subi une micro-coupure. Cliquez à nouveau sur 'Lancer la Simulation AI'.")
+                    st.info("💡 **Conseil :** Relancez la simulation dans quelques secondes.")
 
 # ==========================================
 # TAB 2 : JUMEAU NUMÉRIQUE 2D

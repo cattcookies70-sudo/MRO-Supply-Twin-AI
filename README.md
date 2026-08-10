@@ -1,31 +1,79 @@
-# ✈️ SupplyTwin AI — MRO Supply Chain Risk Simulator
+# ✈️ MRO Supply Twin AI
 
- Un jumeau numérique et agent décisionnel IA développé pour optimiser la chaîne logistique MRO (Maintenance, Repair, and Overhaul) de **Royal Air Maroc**.
+![Python](https://img.shields.io/badge/Python-3.10-blue.svg)
+![Streamlit](https://img.shields.io/badge/Streamlit-1.30+-red.svg)
+![Docker](https://img.shields.io/badge/Docker-Containerized-blue)
+![AWS](https://img.shields.io/badge/AWS-EC2%20%7C%20Cloud-orange)
+![Llama-3](https://img.shields.io/badge/Groq-Llama--3--8B-green)
 
-## 📌 Aperçu du Projet
-Ce projet combine le **Machine Learning** et les **LLMs** pour prédire les risques de retard/rupture de pièces aéronautiques critiques et générer des plans d'action logistiques en temps réel.
-
-### ⚙️ Architecture & Pipeline
-1. **Data Pipeline** : Jointures multi-tables (`purchase_orders`, `parts_master`, `quality_incidents`) avec gestion dynamique de 40 fournisseurs, 7 familles de pièces et des historiques d'incidents.
-2. **Predictive Model (ML)** : Algorithme `GradientBoostingClassifier` prédisant la probabilité de retard de livraison (ROC-AUC ~0.85+).
-3. **Decision Agent (LLM)** : Agent IA (Llama 3.3 via Groq) analysant les scores de risque et préconisant des actions d'urgence (procédures AOG, transferts inter-sites CMN/RAK/TNG, sur-contrôles qualité).
-4. **UI Dashboard** : Application interactive développée sous **Streamlit**.
+An AI-driven Digital Twin designed for **Maintenance, Repair, and Overhaul (MRO)** aeronautical supply chains. This application predicts component stockout/failure risks using Machine Learning and provides real-time strategic recommendations powered by LLaMA-3 via Groq.
 
 ---
 
-## 🛠️ Installation & Exécution
+## 📸 Screenshots & Demo
 
-```bash
-# 1. Cloner le projet
-git clone [https://github.com/ton-username/mro-supply-twin-ai.git](https://github.com/cattcookies70-sudo/MRO-Supply-Twin-AI.git)
-cd mro-supply-twin-ai
+| Dashboard & Risk Prediction | AI Copilot (LLaMA-3 via Groq) |
+| :---: | :---: |
+| ![Dashboard Screenshot](./assets/dashboard.png) | ![Copilot Screenshot](./assets/discu_llm.png) |
 
-# 2. Installer les dépendances
-pip install -r requirements.txt
+> *Figure 1: Predictive risk scoring and intelligent agent assistant for MRO supply chain management.*
 
-# 3. Lancer la préparation des données et l'entraînement ML
-python notebooks/01_data_prep.py
-python notebooks/02_train_model.py
+---
 
-# 4. Lancer l'application Web
-streamlit run app.py
+## ✨ Key Features
+
+- **Predictive Risk Scoring:** ML Model (`Scikit-Learn`) forecasting stockout and component failure risks based on flight hours and maintenance logs.
+- **AI Supply Chain Copilot:** Integrated LLaMA-3 (via Groq API) acting as a domain-expert decision assistant.
+- **Interactive UI:** Built with Streamlit for real-time visualization and parameter tuning.
+- **Fully Containerized:** Packaged with Docker for consistent multi-environment deployment.
+- **Cloud Ready:** Optimized for deployment on AWS (EC2 / App Runner).
+
+---
+
+## 🏗️ Architecture
+
+```text
+[ Raw Data / Parameters ]
+          │
+          ▼
+ [ Scikit-Learn Model ] ──► [ Stockout Risk Score ]
+          │                             │
+          └───────────┬─────────────────┘
+                      ▼
+            [ Streamlit Dashboard ] ◄──► [ Groq API (LLaMA-3) ]
+                      │
+                      ▼
+            [ Docker Container ] ──► [ AWS Cloud Deployment ]
+🚀 Quickstart Guide
+Prerequisites
+Docker Desktop installed.
+
+A free Groq API Key.
+
+Running with Docker (Recommended)
+Clone the repository:
+
+Bash
+git clone [https://github.com/votre-username/MRO-Supply-Twin-AI.git](https://github.com/votre-username/MRO-Supply-Twin-AI.git)
+cd MRO-Supply-Twin-AI
+Build the Docker Image:
+
+Bash
+docker build -t supplytwin-mro:v1 .
+Run the Container:
+
+Bash
+docker run -d -p 8501:8501 -e GROQ_API_KEY="your_groq_api_key_here" --name supplytwin_app supplytwin-mro:v1
+Open http://localhost:8501 in your browser.
+
+📂 Project Structure
+Plaintext
+.
+├── app.py                   # Streamlit UI & Application Logic
+├── Dockerfile               # Container build configurations
+├── requirements.txt         # Python dependencies
+├── models/                  # Trained ML models (.pkl)
+├── assets/                  # README Images & Screenshots
+└── README.md                # Project Documentation
+🎓 Author
+Developed by an Engineering Student at École Centrale Casablanca.
