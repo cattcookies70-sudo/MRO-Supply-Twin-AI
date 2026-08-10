@@ -1,52 +1,75 @@
-# ✈️ MRO Supply Twin AI
+# ✈️ MRO Supply Twin AI — Industry 4.0 Suite
 
 ![Python](https://img.shields.io/badge/Python-3.10-blue.svg)
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.30+-red.svg)
 ![Docker](https://img.shields.io/badge/Docker-Containerized-blue)
-![AWS](https://img.shields.io/badge/AWS-EC2%20%7C%20Cloud-orange)
-![Llama-3](https://img.shields.io/badge/Groq-Llama--3--8B-green)
+![AWS Ready](https://img.shields.io/badge/AWS-EC2%20Ready-orange)
+![Llama-3](https://img.shields.io/badge/Groq-Llama--3.3--70B-green)
 
-An AI-driven Digital Twin designed for **Maintenance, Repair, and Overhaul (MRO)** aeronautical supply chains. This application predicts component stockout/failure risks using Machine Learning and provides real-time strategic recommendations powered by LLaMA-3 via Groq.
+An End-to-End AI-driven Digital Twin designed for **Maintenance, Repair, and Overhaul (MRO)** aeronautical supply chains (Royal Air Maroc - Casablanca CMN Hub). 
+
+This multi-tab application combines **Machine Learning**, **LLM Decision Support (LLaMA-3 via Groq)**, **2D Warehouse Spatial Mapping**, and **3D Interactive Component Inspection**.
 
 ---
 
-## 📸 Screenshots & Demo
+## 📸 Cockpit Overview & Modules
 
-| Dashboard & Risk Prediction | AI Copilot (LLaMA-3 via Groq) |
-| :---: | :---: |
-| ![Dashboard Screenshot](./assets/dashboard.png) | ![Copilot Screenshot](./assets/discu_llm.png) |
+### 🚀 Tab 1: AI Risk Simulator & Decision Agent
+Predicts component stockout and delivery delay risks using Machine Learning (`Scikit-Learn`), combined with an LLM Agent providing structured, real-time operational recommendations for MRO managers.
 
-> *Figure 1: Predictive risk scoring and intelligent agent assistant for MRO supply chain management.*
+![Tab 1 - AI Simulator](./assets/tab1_simulator.png)
+
+---
+
+### 🗺️ Tab 2: 2D Digital Twin (Casablanca CMN Warehouse)
+Provides real-time spatial mapping of warehouse storage racks and part families, highlighting risk levels (Optimal, Warning, Critical AOG) across storage zones.
+
+![Tab 2 - 2D Digital Twin](./assets/tab2_digital_twin_2d.png)
+
+---
+
+### 📦 Tab 3: 3D Interactive Component Inspection
+Interactive 3D visualization of major aeronautical structures (Boeing 787 components, landing gears, engines) allowing MRO engineers to inspect sub-assemblies and verify stock availability before maintenance operations.
+
+![Tab 3 - 3D Inspection](./assets/tab3_3d_inspection.png)
 
 ---
 
 ## ✨ Key Features
 
-- **Predictive Risk Scoring:** ML Model (`Scikit-Learn`) forecasting stockout and component failure risks based on flight hours and maintenance logs.
-- **AI Supply Chain Copilot:** Integrated LLaMA-3 (via Groq API) acting as a domain-expert decision assistant.
-- **Interactive UI:** Built with Streamlit for real-time visualization and parameter tuning.
-- **Fully Containerized:** Packaged with Docker for consistent multi-environment deployment.
-- **Cloud Ready:** Optimized for deployment on AWS (EC2 / App Runner).
+- **Predictive Risk Scoring:** ML Model (`Scikit-Learn`) forecasting delay probabilities based on lead time, ordered quantities, fill rates, supplier history, and quality incidents.
+- **AI Supply Chain Copilot:** Integrated LLaMA-3.3-70B (via Groq API) acting as a domain-expert decision assistant with structured action plans.
+- **2D Warehouse Digital Twin:** Interactive Plotly map visualizing warehouse rack occupancy and criticality at Casablanca CMN Hub.
+- **3D Aeronautical Viewer:** Embedded 3D model inspection for aircraft components (gL TF / Sketchfab integration).
+- **Fully Containerized:** Packaged with Docker for seamless deployment across local and cloud environments.
+- **Cloud Ready:** Fully containerized with Docker, ready for AWS deployment (EC2 / App Runner / ECS).
 
 ---
 
 ## 🏗️ Architecture
 
 ```text
-[ Raw Data / Parameters ]
-          │
-          ▼
- [ Scikit-Learn Model ] ──► [ Stockout Risk Score ]
-          │                             │
-          └───────────┬─────────────────┘
-                      ▼
-            [ Streamlit Dashboard ] ◄──► [ Groq API (LLaMA-3) ]
-                      │
-                      ▼
-            [ Docker Container ] ──► [ AWS Cloud Deployment ]
+┌────────────────────────────────────────────────────────────────────────┐
+│                        Streamlit Cockpit UI                            │
+├────────────────────────┬───────────────────────┬───────────────────────┤
+│ Tab 1: ML & AI Agent   │ Tab 2: 2D Digital Twin│ Tab 3: 3D Inspection  │
+└───────────┬────────────┴───────────┬───────────┴───────────┬───────────┘
+            │                        │                       │
+            ▼                        ▼                       ▼
+   [ Scikit-Learn ML ]     [ Plotly Spatial Map ]    [ 3D / WebGL Viewer ]
+   [ Groq LLaMA-3 Agent]   (Warehouse Racks CMN)     (Boeing 787 Models)
+            │
+            ▼
+   [ Docker Container ] ──► [ AWS Cloud Deployment ]
+
+## 🌐 Deployment Options
+
+- **Local Execution (Docker):** Fully operational locally via Docker Desktop.
+- **Cloud Deployment (AWS EC2):** The application is packaged and prepared for AWS deployment (`Dockerfile` optimized). Instructions for launching on an EC2 instance (`t2.micro` / `t3.micro`) are included in the repository.
+
 🚀 Quickstart Guide
 Prerequisites
-Docker Desktop installed.
+Docker Desktop installed and running.
 
 A free Groq API Key.
 
@@ -69,11 +92,15 @@ Open http://localhost:8501 in your browser.
 📂 Project Structure
 Plaintext
 .
-├── app.py                   # Streamlit UI & Application Logic
-├── Dockerfile               # Container build configurations
+├── app.py                   # Main Streamlit Cockpit Application
+├── Dockerfile               # Docker build instructions
 ├── requirements.txt         # Python dependencies
 ├── models/                  # Trained ML models (.pkl)
-├── assets/                  # README Images & Screenshots
+├── data/                    # Processed MRO datasets
+├── assets/                  # README Screenshots & Visuals
+│   ├── tab1_simulator.png
+│   ├── tab2_digital_twin_2d.png
+│   └── tab3_3d_inspection.png
 └── README.md                # Project Documentation
 🎓 Author
-Developed by an Engineering Student at École Centrale Casablanca.
+Developed as an Engineering Project at École Centrale Casablanca.
