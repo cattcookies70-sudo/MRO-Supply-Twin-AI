@@ -78,7 +78,7 @@ Running with Docker (Recommended)
 Clone the repository:
 
 Bash
-git clone [https://github.com/votre-username/MRO-Supply-Twin-AI.git](https://github.com/votre-username/MRO-Supply-Twin-AI.git)
+git clone [https://github.com/votre-username/MRO-Supply-Twin-AI.git](https://github.com/cattcookies70-sudo/MRO-Supply-Twin-AI.git)
 cd MRO-Supply-Twin-AI
 Build the Docker Image:
 
