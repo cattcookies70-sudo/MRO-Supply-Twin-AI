@@ -61,3 +61,46 @@ Interactive 3D visualization of major aeronautical structures (Boeing 787 compon
             │
             ▼
    [ Docker Container ] ──► [ AWS Cloud Deployment ]
+
+🚀 Quickstart Guide
+Prerequisites
+Docker Desktop installed and running.
+
+A free Groq API Key.
+
+Running with Docker (Recommended)
+Clone the repository:
+
+Bash
+git clone [https://github.com/cattcookies70-sudo/MRO-Supply-Twin-AI.git](https://github.com/cattcookies70-sudo/MRO-Supply-Twin-AI.git)
+cd MRO-Supply-Twin-AI
+Build the Docker Image:
+
+Bash
+docker build -t supplytwin-mro:v1 .
+Run the Container:
+
+Bash
+docker run -d -p 8501:8501 -e GROQ_API_KEY="your_groq_api_key_here" --name supplytwin_app supplytwin-mro:v1
+Open http://localhost:8501 in your browser.
+
+📂 Project Structure
+Plaintext
+.
+├── .devcontainer/           # Dev Container configuration
+├── assets/                  # Dashboard screenshots & media
+│   ├── dashboard.png
+│   ├── 2D.png
+│   └── 3D.png
+├── data/                    # Processed MRO datasets
+├── models/                  # Trained ML models (.pkl)
+├── notebooks/               # Data science & LLM development notebooks
+├── .gitignore               # Git ignore rules
+├── Dockerfile               # Docker build instructions
+├── docker-compose.yml       # Multi-container orchestrator configuration
+├── README.md                # Project documentation
+├── app.py                   # Main Streamlit Cockpit Application
+├── requirements.txt         # Python dependencies
+└── test_groq.py             # Script for testing Groq API connection
+🎓 Author
+Developed as an Engineering Project at École Centrale Casablanca.
