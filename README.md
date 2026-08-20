@@ -40,7 +40,7 @@ Interactive 3D visualization of major aeronautical structures (Boeing 787 compon
 - **Predictive Risk Scoring:** ML Model (`Scikit-Learn`) forecasting delay probabilities based on lead time, ordered quantities, fill rates, supplier history, and quality incidents.
 - **AI Supply Chain Copilot:** Integrated LLaMA-3.3-70B (via Groq API) acting as a domain-expert decision assistant with structured action plans.
 - **2D Warehouse Digital Twin:** Interactive Plotly map visualizing warehouse rack occupancy and criticality at Casablanca CMN Hub.
-- **3D Aeronautical Viewer:** Embedded 3D model inspection for aircraft components (gLTF / Sketchfab integration).
+- **3D Aeronautical Viewer:** Embedded 3D model inspection for aircraft components (gLFT / Sketchfab integration).
 - **Fully Containerized:** Packaged with Docker for seamless deployment across local and cloud environments.
 - **Cloud Ready:** Containerized with Docker, ready for AWS deployment (EC2 / App Runner / ECS).
 
@@ -63,30 +63,39 @@ Interactive 3D visualization of major aeronautical structures (Boeing 787 compon
    [ Docker Container ] ──► [ AWS Cloud Deployment ]
 ```
 
-🚀 Quickstart Guide
-Prerequisites
-Docker Desktop installed and running.
+---
 
-A free Groq API Key.
+## 🚀 Quickstart Guide
 
-Running with Docker (Recommended)
-Clone the repository:
+### Prerequisites
+- Docker Desktop installed and running.
+- A free Groq API Key.
 
-Bash
-git clone [https://github.com/cattcookies70-sudo/MRO-Supply-Twin-AI.git](https://github.com/cattcookies70-sudo/MRO-Supply-Twin-AI.git)
-cd MRO-Supply-Twin-AI
-Build the Docker Image:
+### Running with Docker (Recommended)
 
-Bash
-docker build -t supplytwin-mro:v1 .
-Run the Container:
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/cattcookies70-sudo/MRO-Supply-Twin-AI.git](https://github.com/cattcookies70-sudo/MRO-Supply-Twin-AI.git)
+   cd MRO-Supply-Twin-AI
+   ```
 
-Bash
-docker run -d -p 8501:8501 -e GROQ_API_KEY="your_groq_api_key_here" --name supplytwin_app supplytwin-mro:v1
-Open http://localhost:8501 in your browser.
+2. **Build the Docker Image:**
+   ```bash
+   docker build -t supplytwin-mro:v1 .
+   ```
 
-📂 Project Structure
-Plaintext
+3. **Run the Container:**
+   ```bash
+   docker run -d -p 8501:8501 -e GROQ_API_KEY="your_groq_api_key_here" --name supplytwin_app supplytwin-mro:v1
+   ```
+
+4. Open `http://localhost:8501` in your browser.
+
+---
+
+## 📂 Project Structure
+
+```text
 .
 ├── .devcontainer/           # Dev Container configuration
 ├── assets/                  # Dashboard screenshots & media
@@ -103,5 +112,9 @@ Plaintext
 ├── app.py                   # Main Streamlit Cockpit Application
 ├── requirements.txt         # Python dependencies
 └── test_groq.py             # Script for testing Groq API connection
-🎓 Author
-Developed as an Engineering Project at École Centrale Casablanca.
+```
+
+---
+
+## 🎓 Author
+Developed as an Engineering Project at **École Centrale Casablanca**.
