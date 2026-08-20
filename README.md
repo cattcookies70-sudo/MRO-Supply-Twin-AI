@@ -40,9 +40,9 @@ Interactive 3D visualization of major aeronautical structures (Boeing 787 compon
 - **Predictive Risk Scoring:** ML Model (`Scikit-Learn`) forecasting delay probabilities based on lead time, ordered quantities, fill rates, supplier history, and quality incidents.
 - **AI Supply Chain Copilot:** Integrated LLaMA-3.3-70B (via Groq API) acting as a domain-expert decision assistant with structured action plans.
 - **2D Warehouse Digital Twin:** Interactive Plotly map visualizing warehouse rack occupancy and criticality at Casablanca CMN Hub.
-- **3D Aeronautical Viewer:** Embedded 3D model inspection for aircraft components (gL TF / Sketchfab integration).
+- **3D Aeronautical Viewer:** Embedded 3D model inspection for aircraft components (gLTF / Sketchfab integration).
 - **Fully Containerized:** Packaged with Docker for seamless deployment across local and cloud environments.
-- **Cloud Ready:** Fully containerized with Docker, ready for AWS deployment (EC2 / App Runner / ECS).
+- **Cloud Ready:** Containerized with Docker, ready for AWS deployment (EC2 / App Runner / ECS).
 
 ---
 
@@ -56,52 +56,8 @@ Interactive 3D visualization of major aeronautical structures (Boeing 787 compon
 └───────────┬────────────┴───────────┬───────────┴───────────┬───────────┘
             │                        │                       │
             ▼                        ▼                       ▼
-   [ Scikit-Learn ML ]     [ Plotly Spatial Map ]    [ 3D / WebGL Viewer ]
-   [ Groq LLaMA-3 Agent]   (Warehouse Racks CMN)     (Boeing 787 Models)
+   [ Scikit-Learn ML ]      [ Plotly Spatial Map ]    [ 3D / WebGL Viewer ]
+   [ Groq LLaMA-3 Agent]    (Warehouse Racks CMN)     (Boeing 787 Models)
             │
             ▼
    [ Docker Container ] ──► [ AWS Cloud Deployment ]
-   ```
-
-## 🌐 Deployment Options
-
-- **Local Execution (Docker):** Fully operational locally via Docker Desktop.
-- **Cloud Deployment (AWS EC2):** The application is packaged and prepared for AWS deployment (`Dockerfile` optimized). Instructions for launching on an EC2 instance (`t2.micro` / `t3.micro`) are included in the repository.
-
-🚀 Quickstart Guide
-Prerequisites
-Docker Desktop installed and running.
-
-A free Groq API Key.
-
-Running with Docker (Recommended)
-Clone the repository:
-
-Bash
-git clone [https://github.com/votre-username/MRO-Supply-Twin-AI.git](https://github.com/cattcookies70-sudo/MRO-Supply-Twin-AI.git)
-cd MRO-Supply-Twin-AI
-Build the Docker Image:
-
-Bash
-docker build -t supplytwin-mro:v1 .
-Run the Container:
-
-Bash
-docker run -d -p 8501:8501 -e GROQ_API_KEY="your_groq_api_key_here" --name supplytwin_app supplytwin-mro:v1
-Open http://localhost:8501 in your browser.
-
-📂 Project Structure
-Plaintext
-.
-├── app.py                   # Main Streamlit Cockpit Application
-├── Dockerfile               # Docker build instructions
-├── requirements.txt         # Python dependencies
-├── models/                  # Trained ML models (.pkl)
-├── data/                    # Processed MRO datasets
-├── assets/                  # README Screenshots & Visuals
-│   ├── tab1_simulator.png
-│   ├── tab2_digital_twin_2d.png
-│   └── tab3_3d_inspection.png
-└── README.md                # Project Documentation
-🎓 Author
-Developed as an Engineering Project at École Centrale Casablanca.
